@@ -5,6 +5,7 @@ import {
   encodeSession,
   hashPassword,
 } from '../../auth/AuthFunctions'
+import { db } from '../../Database'
 import { Auth } from '../entity/auth/Auth'
 import { User } from '../entity/auth/User'
 import { UserRoles } from '../entity/auth/UserRoles'
@@ -21,18 +22,26 @@ export class AuthResolver {
 
   @Mutation(() => User)
   async register(@Arg('data') data: CreateUserInput): Promise<User> {
-    // let userInput = new CreateUserInput()
+    let userInput = new CreateUserInput()
     const hashedPassword = await hashPassword(data.password)
 
     const role = await UserRoles.findOne({ role: RolesEnum[0] })
     if (role) {
-      const userInput = {
+      userInput = {
         username: data.username,
         password: hashedPassword,
-        roles: [role],
       }
 
-      return await User.create(userInput).save()
+      return await User.create(userInput)
+        .save()
+        .then(async newUser => {
+          await db
+            .createQueryBuilder()
+            .relation(User, 'roles')
+            .of(newUser)
+            .add(role)
+          return newUser
+        })
     } else throw new Error('Wrong role')
   }
 

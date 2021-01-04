@@ -18,15 +18,15 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string
 
-  @Field(() => String)
-  @Column()
+  @Column({ select: false })
   password: string
 
   @Field(() => String)
   @Column({ unique: true })
   username: string
 
-  @ManyToMany(() => UserRoles, { cascade: true })
+  @Field(() => [UserRoles])
+  @ManyToMany(() => UserRoles)
   @JoinTable()
   roles: UserRoles[]
 

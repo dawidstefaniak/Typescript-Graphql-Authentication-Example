@@ -23,8 +23,9 @@ export class UserResolver {
 
   @Query(() => User)
   async user(@Arg('id') id: string): Promise<User> {
-    const user = await User.findOne(id) // this.recipeService.findAll()
+    const user = await User.findOne(id, { relations: ['roles'] }) // this.recipeService.findAll()
 
+    console.log('user', user)
     if (user) {
       const newSession = new CreateUserInput()
 
@@ -32,6 +33,14 @@ export class UserResolver {
       return user
     } else throw new Error('User not Found')
   }
+
+  /*
+  sanitizeUser(user: User) {
+    const sanitizedUser = user
+    sanitizedUser.password
+    return sanitizedUser
+  }
+  */
 
   @Mutation(() => User)
   async createUser(@Arg('data') data: CreateUserInput): Promise<User> {
