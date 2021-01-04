@@ -9,6 +9,13 @@ export class UserResolver {
   // dependency injection
   // constructor(private recipeService: RecipeService) {}
 
+  /*
+  @Query(() =>User)
+  me(): Promise<User[]> {
+    return 
+  }
+  */
+
   @Query(() => [User])
   users(): Promise<User[]> {
     return User.find() // this.recipeService.findAll()

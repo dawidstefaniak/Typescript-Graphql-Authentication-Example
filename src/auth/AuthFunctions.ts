@@ -1,5 +1,4 @@
 import { decode, encode, TAlgorithm } from 'jwt-simple'
-import { Session } from '../typeorm/entity/auth/Session'
 import { CreateSessionInput } from '../typeorm/inputs/CreateSessionInput'
 import { DecodeResult, EncodeResult } from './interfaces/Tokens'
 import bcrypt from 'bcrypt'
